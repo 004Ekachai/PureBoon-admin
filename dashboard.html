@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PureBoon Dashboard</title>
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; }
+    header { background:#4CAF50; color:white; padding:10px 20px; font-size:20px; font-weight:bold; display:flex; justify-content:space-between; align-items:center; }
+    nav { width:200px; background:#f4f4f4; padding:20px; float:left; height:100vh; box-sizing:border-box; }
+    nav button { display:block; width:100%; margin:10px 0; padding:10px; cursor:pointer; border:1px solid #ddd; background:white; text-align:left; }
+    main { margin-left:220px; padding:20px; }
+    section { display:none; }
+    section.active { display:block; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+    th { background:#f4f4f4; }
+    .form-group { margin:10px 0; }
+    .form-group label { display:block; margin-bottom:5px; }
+    .form-group input, .form-group textarea, .form-group select { width:100%; padding:8px; }
+    .btn { background:#4CAF50; color:white; padding:8px 15px; border:none; cursor:pointer; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span>PureBoon Dashboard</span>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <nav>
+    <button onclick="showSection('ordersSection')">📦 Orders</button>
+    <button onclick="showSection('productsSection')">🛒 Products</button>
+    <button onclick="showSection('paymentSection')">💳 Payment</button>
+    <button onclick="showSection('shippingSection')">🚚 Shipping</button>
+  </nav>
+
+  <main>
+    <!-- Orders -->
+    <section id="ordersSection" class="active">
+      <h2>Orders Overview</h2>
+      <p>จำนวนออเดอร์ทั้งหมด: <span id="totalOrders">0</span></p>
+      <table>
+        <thead>
+          <tr>
+            <th>OrderID</th><th>Email</th><th>Name</th><th>Phone</th><th>Address</th>
+            <th>Total</th><th>Method</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTable"></tbody>
+      </table>
+    </section>
+
+    <!-- Products -->
+    <section id="productsSection">
+      <h2>Manage Products</h2>
+      <div class="form-group"><label>Name</label><input id="prodName"></div>
+      <div class="form-group"><label>Category</label><input id="prodCategory"></div>
+      <div class="form-group"><label>Description</label><textarea id="prodDesc"></textarea></div>
+      <div class="form-group"><label>Features (comma separated)</label><input id="prodFeatures"></div>
+      <div class="form-group"><label>Main Image URL</label><input id="prodImage"></div>
+      <div class="form-group"><label>Other Images (comma separated)</label><input id="prodImages"></div>
+      <div class="form-group"><label>Size & Price (JSON format)</label><input id="prodSizePrice" placeholder='{"M":500,"L":600}'> </div>
+      <button class="btn" onclick="addProduct()">➕ Add Product</button>
+      <h3>Product List</h3>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Category</th><th>SizePrice</th><th>Action</th></tr>
+        </thead>
+        <tbody id="productsTable"></tbody>
+      </table>
+    </section>
+
+    <!-- Payment -->
+    <section id="paymentSection">
+      <h2>Payment Settings</h2>
+      <div class="form-group"><label>PromptPay</label><input id="payPromptpay"></div>
+      <div class="form-group"><label>Bank Name</label><input id="payBankName"></div>
+      <div class="form-group"><label>Account Name</label><input id="payAccountName"></div>
+      <div class="form-group"><label>Account Number</label><input id="payAccountNumber"></div>
+      <div class="form-group"><label>Cash on Delivery (COD)</label>
+        <select id="payCOD"><option value="true">Enable</option><option value="false">Disable</option></select>
+      </div>
+      <button class="btn" onclick="savePayment()">💾 Save Payment</button>
+    </section>
+
+    <!-- Shipping -->
+    <section id="shippingSection">
+      <h2>Shipping Settings</h2>
+      <div class="form-group"><label>Shipping Method</label><input id="shipMethod"></div>
+      <div class="form-group"><label>Shipping Cost</label><input id="shipCost" type="number"></div>
+      <button class="btn" onclick="saveShipping()">💾 Save Shipping</button>
+    </section>
+  </main>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

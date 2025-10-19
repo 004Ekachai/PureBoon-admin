@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - PureBoon</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: "Kanit", sans-serif;
+      background: #f8f9fa;
+    }
+    .login-card {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    .btn-success {
+      background: #28a745;
+      border: none;
+    }
+    .btn-success:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card text-center">
+    <h4 class="mb-4 text-success"><i class="fa-solid fa-user-shield me-2"></i> PureBoon Admin</h4>
+    <form id="loginForm">
+      <div class="mb-3 text-start">
+        <label for="email" class="form-label">อีเมล</label>
+        <input type="email" class="form-control" id="email" placeholder="your@email.com" required>
+      </div>
+      <div class="mb-3 text-start">
+        <label for="password" class="form-label">รหัสผ่าน</label>
+        <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-success w-100">เข้าสู่ระบบ</button>
+      <p id="errorMsg" class="text-danger mt-3"></p>
+    </form>
+  </div>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // -------------------------------
+    // Firebase Config
+    // -------------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyBDq5Nnfh_ozp4JKoS38UsjzrYNTKW0kjQ",
+      authDomain: "pureboon-firebase.firebaseapp.com",
+      projectId: "pureboon-firebase",
+      storageBucket: "pureboon-firebase.firebasestorage.app",
+      messagingSenderId: "287988948151",
+      appId: "1:287988948151:web:71629f605937a76b914132",
+      measurementId: "G-DSREDR8C8V"
+    };
+
+    // -------------------------------
+    // Init Firebase
+    // -------------------------------
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // -------------------------------
+    // Login Form
+    // -------------------------------
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const token = await user.getIdTokenResult();
+
+        if (token.claims.role === "admin") {
+          // ✅ ถ้าเป็น admin → ไป dashboard
+          location.href = "dashboard.html";
+        } else {
+          // ❌ ถ้าไม่ใช่ admin → logout
+          errorMsg.textContent = "บัญชีนี้ไม่ใช่ผู้ดูแลระบบ";
+          await auth.signOut();
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        errorMsg.textContent = "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+      }
+    });
+  </script>
+</body>
+</html>
